@@ -1,0 +1,894 @@
+---
+title: "Project 3 Report"
+date: "12/11/2022"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+### Project#3 Final Report
+
+### Title of the Report
+
+### BA 4420 Data Analytics for Managers
+
+### by
+
+### List of Names
+Alfia Parvez
+Sakina Rao
+Isra Hassan
+### 12/11/2022
+
+\newpage
+
+
+
+# Executive Summary
+
+This analysis is being conducted by graduate students at University of Minnesota Duluth, as a final project in the Data Analytics for Managers BA4420 course. We have learned some data analysis and machine learning techniques during the course which we will be implementing on a real-life dataset for analyzing house prices in Iowa. The dataset was obtained from Kaggle.com.
+The data analysis will help us to gain insights to the housing market in Iowa and help us to understand the most important driving factors of the price. For a business, this analysis will give both the sellers and buyers of houses an understanding of the current scenario in the real estate industry to make an informed decision regarding their properties. Buyers can determine what type of house they want depending on their budget and sellers can enhance their property to get
+better value for their asset. A general understanding of demand and supply can also be drawn using this analysis.
+We used 3 machine learning models to predict Sale Price of houses based on different variables and find out which variables affect the Sale Price of a house. Significant variables were selected using Forward Selection, backward elimination and stepwise, and Exploratory data analysis. The models were evaluated using RMSE and Lift charts. The evaluation results suggested that linear regression regression model performed the best among regression tree, linear regression and knn-regression. 
+
+\newpage
+
+
+
+# Table of Contents
+
+_**[Business Understanding 1](#_Toc120027009)**_
+
+_**[Data Understanding and Exploratory Data Analysis (EDA) and/or Data Preparation 1](#_Toc120027010)**_
+
+**[Data acquisition/collection 1](#_Toc120027011)**
+
+**[Data description and quality 1](#_Toc120027012)**
+
+**[EDA 1](#_Toc120027013)**
+
+**[Dimension reduction 1](#_Toc120027014)**
+
+**[Preliminary insights 1](#_Toc120027015)**
+
+**[Data cleaning 1](#_Toc120027016)**
+
+**[Data Preparation 1](#_Toc120027017)**
+
+_**[Expanded Final Modeling and Predictive Analytics and their Evaluation 2](#_Toc120027018)**_
+
+_**[Deployment 2](#_Toc120027019)**_
+
+_**[Comparisons with documented results 2](#_Toc120027020)**_
+
+\newpage
+
+
+# Business Understanding
+
+1. Describe the application domain and the story of why this project is relevant and important
+
+This project applies to the real estate industry. Through the dataset we are trying to predict the house prices based on different parameters / variables such as location, size (sq ft), number of bedrooms and bathroom etc. These variables will help us predict accurate prices of a house. This information is valuable to both buyers and sellers of the house. People who are planning to buy a house can benefit by managing the expectations and budget of the house. Sellers, on the other hand, can benefit by getting the best value for their houses when they put it up on the market depending on the house specifications. 
+
+2. Describe the project's primary objective using a SMART question (e.g. Which factors increases the probability for identifying and reducing credit card fraudulent transactions for the American credit card market in 2022?)
+What are the top three features a buyer should focus to increase the Sales Price of their house in Iowa between 2021-2022?
+
+3. What are the criteria for business success?
+
+Criteria for business success through this data analysis is to help buyers and sellers get the best value for their money and resources. This will help the real estate industry grow at large and businesses can make good money out of these buying and selling transactions. Real estate represents a significant portion of most people's wealth. The size and scale of the real estate market makes it an attractive and lucrative sector for many investors. Through this data analysis we can predict the future of the real estate market in coming years. Our goal with this data analysis is to help our customers make the best decisions when purchasing or selling properties.
+
+
+4. What problem types are being applied and explain why you chose them
+
+The first step is to understand what kind of problem you're trying to solve. Data Analysts typically work with six problem types: 
+i) Making Predictions: This problem type involves using data to make an informed decision about how things may be in the future. 
+ii) Categorizing Things: assigning information to different groups or clusters based on common features.
+iii) Spotting something unusual: identify data that is different from the norm.
+iv) Identifying themes:  grouping information into broader concepts.
+v) Discovering Connections: find similar challenges faced by different entities, and then combine data and insights to address them.
+vi) Finding Patterns: using historical data to understand what happened in the past and is therefore likely to happen again.
+This project involves using the dataset to make predictions about the house prices based on different features in the dataset. We will be predicting house prices based on the variables in the dataset provided for the competition. The problem type this project addresses is: Making Predictions.
+There are a number of features that play a role in determining the price of a house. It might not just be limited to the plot area or number of bedrooms of the house, rather house prices are affected by the neighborhood it is located in, the year it was built, its sales condition and many other features. This project will demonstrate how and to what extent different variables affect the sales price of a house. Here we know the target variable for the dataset, which is the Sales Price of the houses it will come under supervised learning.
+
+# Data Understanding and Exploratory Data Analysis (EDA) and/or Data Preparation
+
+## Data acquisition/collection
+
+1. How was the data acquired and what is the background of the data? If multiple data sources are acquired, describe any integration performed (see data preparation below).
+
+Data for this project was acquired through the famous platforms for data scientist and machine learning which is Kaggle. We have taken part in a real life ongoing competition being conducted by the platform. Kaggle offers a variety of datasets and allows us to work on them for data analysis. We can explore and build models, collaborate with other data scientists and enter competitions to solve data challenges. We can also publish our results on the platform. We decided to use Kaggle as our data source because we wanted to work on real life data and also participate in a real world competition on Kaggle so we could have maximum learning and collaborative experience while working on this project. We also get to experience how data analysis works in the real world!
+Dataset link:
+https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques 
+Background of data includes house prices in the Ames, Iowa location. Variables are explained in detail in the following sections. Each variable with its description and some notes regarding the data type, missing values and other relevant information can be found in table 1.
+There are four files available in the dataset:
+train.csv:  the training set
+test.csv - the test set
+data_description.txt - full description of each column, originally prepared by Dean De Cock but lightly edited to match the column names used here
+sample_submission.csv - a benchmark submission from a linear regression on year and month of sale, lot square footage, and number of bedrooms
+We have used the “train.csv” file for the data understanding and exploratory data analysis (EDA).
+There are a total of 81 attributes and 1460 instances in the dataset. As we move forward in the project, we will shortlist variables depending on our analysis and include the ones that are most relevant to our project. For this proposal, we have mentioned all data variables for easy understanding and reference.
+No other sources of data are included in the scope of this project at this stage. We plan on using the same dataset for the remaining project, however if at any point we feel the need to integrate other dataset, we will update the report accordingly.
+
+
+## Data description and quality
+
+1. Display selected variables using a screenshot of the raw data. What is the data instance? What might be the target variable, if any?
+
+![Raw data visual](projectA.png){width="50%"}
+![Raw data visual 2](projectB.png){width="50%"}
+Each data instance describes different features of a house and the price of the house in different Neighbourhoods of Iowa.
+
+The target variable is SalesPrice.
+
+2. Describe the data, including its quality, any missing values, outliers and other characteristics using a table
+
+![Data Description](projectC.jpg){width="50%"}
+![Data Description 2](projectD.jpg){width="50%"}
+![Data Description 3](projectE.jpg){width="50%"}
+![Data Description 4](projectF.jpg){width="50%"}
+![Data Description 5](projectG.jpg){width="50%"}
+
+
+3. Describe why the data is relevant and trustworthy
+
+Data for this project was acquired through the famous platforms for data scientist and machine learning which is Kaggle which is one of the most trustworthy sites. A huge number of datasets are available on the site to be used by data analysts and data scientists. We also chose a dataset from kaggle for this project.
+
+## EDA
+
+1. Explore the data using proportion analysis, visualization, aggregation and other EDA techniques. This exploration must include at least a scatterplot, a histogram and one more chart.
+
+```{r reading the dataset}
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+
+```
+
+
+```{r first exploration}
+summary(data)
+```
+
+```{r more exploration}
+nrow(data)
+```
+```{r more exploration 2}
+str(data)
+```
+
+###First chart
+
+```{r first}
+data$SaleCondition <- as.factor(data$SaleCondition)
+boxplot(data$SalePrice ~ data$SaleCondition, data = data, xlab = "Sales Condition", ylab = "Sales Price", main = "Relationship")
+
+```
+
+The boxplot between the sales price and the sales condition shows that the houses with partial condition have higher prices. Also, houses with normal condition have many outliers.
+
+###Second chart
+
+```{r second}
+library(tidyverse)
+plot(data$YearBuilt, data$SalePrice, col='red', pch=19)
+points(data$YearRemodAdd, data$SalePrice, col='blue', pch=19)
+legend(1, 25, legend=c('YearBuilt', 'YearRemodAdd'), pch=c(19, 19), col=c('red', 'blue'))
+ggplot() + geom_point(data = data, aes(x = YearBuilt, y = SalePrice, color = SaleCondition))
+data$HouseStyle <- as.factor(data$HouseStyle)
+data$Neighborhood<- as.factor(data$Neighborhood)
+
+```
+
+The scatter plot between the Sales Price and the year in which the house was built shows that newer houses tend to have more price than older houses with some outliers. The houses with ‘partial’ sale condition are mostly which were newly built. Most of the houses seem to be in ‘normal’ condition.
+
+
+###Third chart
+
+```{r third}
+hist(data$SalePrice, col='red')
+```
+The histogram of SalePrice shows that the maximum number of houses have the price range between 100000 to 150000.
+
+
+```{r fourth}
+data$Neighborhood <- as.factor(data$Neighborhood)
+boxplot(data$SalePrice ~ data$Neighborhood, data = data, xlab = "Neighbourhood", ylab = "Sales Price", main= "Relationship")
+
+```
+The boxplot between the neighborhoods and sale price shows that BrookSide and South & West of Iowa State University have cheap houses. While Northridge and Northridge Heights are rich neighborhoods with several outliers in terms of price.
+
+
+
+## Dimension reduction
+
+1. Perform a correlation analysis, PCA, stepwise regression or any other exploratory or dimension reduction techniques. Specify if any columns or rows are excluded or included.
+
+We performed dimension reduction using two tehniques:
+i) First, we did Forward Selection, Backward Elimination and Stepwise on numerical variables only
+ii) Second, we did Forward Selection, Backward Elimination and Stepwise on all the variables 
+
+### Forward Selection using Numeric Variables 
+
+```{r first methiod}
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+names <- c(2,3,6:17,22:26,28:34,36,40:43,54,56,58,59,61,64:66,73:75,79,80)
+data[,names] <- lapply(data[,names] , factor)
+data2 <- data[,-c(2:3,6:17,22:26,28:34,36,40:43,54,56,58,59,61,64:66,73:75,79,80)]
+
+for(i in 1:ncol(data2)) {                                  
+  data2[ , i][is.na(data2[ , i])] <- mean(data2[ , i], na.rm = TRUE)
+}
+
+data.lm2 <- lm(SalePrice ~ ., data = data2)
+data.lm.null2 <- lm(SalePrice~1, data = data2)
+
+data.lm.step2 <- step(data.lm.null2,   
+                    scope=list(lower=data.lm.null2, upper=data.lm2), direction =  
+                      "forward")
+summary(data.lm.step2)
+
+```
+Variables selected Using Forward Selection on Numeric Variables only:
+OverallQual
+GrLivArea
+GarageCars
+LotArea       
+MasVnrArea   
+KitchenAbvGr
+YearBuilt   
+OverallCond 
+BedroomAbvGr 
+TotRmsAbvGrd
+
+### Backward Elimination on numeric variables from the dataset
+```{r second method}
+data2.lm.step3 <- step(data.lm2, direction = "backward")
+summary(data2.lm.step3) 
+```
+Variables selected using Backward Elimation:
+LotArea      
+OverallQual   
+OverallCond   
+YearBuilt  
+MasVnrArea    
+BsmtFinSF1
+X1stFlrSF    
+X2ndFlrSF     
+BsmtFullBath  
+BedroomAbvGr 
+KitchenAbvGr 
+TotRmsAbvGrd
+GarageCars
+
+###stepwise on numeric variables from the datset
+
+```{r third method 2}
+data2.lm.step4 <- step(data.lm2, direction = "both")
+summary(data2.lm.step4)
+```
+Variables selected using the stepwise on numeric variables:
+LotArea
+OverallQual   
+OverallCond   
+YearBuilt   
+MasVnrArea   
+BsmtFinSF1
+X1stFlrSF     
+X2ndFlrSF     
+BsmtFullBath 
+BedroomAbvGr 
+KitchenAbvGr 
+TotRmsAbvGrd
+GarageCars
+
+Numeric Variables selected from the above techniques for linear regression model:
+GrLivArea
+YearBuilt
+TotalBsmtSF
+GarageCars
+KitchenAbvGr
+YearRemodAdd
+MassVnrArea
+Fireplaces 
+BedroomAbvGr
+TotRmsAbvGrd
+ScreenPorch 
+
+Variables selected using Exploratory Data Analysis:
+Neighbourhood
+SalesType
+SalesCondition
+HouseStyle 
+
+
+### Forward Selection using all variables
+```{r first method}
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+
+#converting categorical variables into factor
+names <- c(2,3,6:17,22:26,28:34,36,40:43,54,56,58,59,61,64:66,73:75,79,80)
+data[,names] <- lapply(data[,names] , factor)
+
+#replacing NAs with the mean
+for(i in 1:ncol(data)) {                                  
+  data[ , i][is.na(data[ , i])] <- mean(data[ , i], na.rm = TRUE)
+}
+
+#removing columns with mostly NAs
+data3 <- data[, -c(1,73,74,75,7,10)]
+data3 <- na.omit(data3)
+
+#base linear regression model
+data.lm <- lm(SalePrice ~ ., data = data3)
+
+#Null model
+data.lm.null <- lm(SalePrice~1, data = data3)
+
+#forward selection
+data.lm.step <- step(data.lm.null,   
+                     scope=list(lower=data.lm.null, upper=data.lm), direction =  
+                       "forward")
+
+summary(data.lm.step) 
+
+```
+
+The variables selected using Forward Selection:
+OverallQual
+GrLivArea
+NeighborhoodEdwards
+NeighborhoodNAmes
+RoofMatCompShg
+RoofMatlMembran
+RoofMatlMetal
+RoofMatlTar&Grv
+RoofMatlWdShake
+RoofMatlWdShngl
+BsmtFinSF1
+BsmtQualGd
+Condition2PosN
+TotalBsmtSF 
+OverallCond  
+BsmtExposureGd
+KitchenQualGd 
+KitchenQualTA
+SaleTypeNew
+LotArea 
+PoolArea
+
+### Backward Elimination using all variables
+```{r second method 2}
+data2.lm.step2 <- step(data.lm, direction = "backward")
+summary(data2.lm.step2) 
+```
+Variables selected using Backward elimination
+LotArea
+Condition2PosN
+OverallQual
+OverallCond
+RoofMatlCompShg
+RoofMatlMembran 
+RoofMatlMetal
+RoofMatlTar&Grv
+RoofMatlWdShake 
+RoofMatlWdShngl
+BsmtQualGd
+BsmtExposureGd
+BsmtFinSF1
+BsmtFinSF2
+BsmtUnfSF
+X1stFlrSF  
+X2ndFlrSF
+KitchenQualGd
+KitchenQualTA
+PoolArea
+
+###Stepwise for all variables
+```{r third method}
+data2.lm.step3 <- step(data.lm, direction = "both")
+summary(data2.lm.step3)
+```
+Variables selected stepwise:
+LotArea
+Condition2PosN 
+OverallQual
+OverallCond 
+RoofMatlCompShg 
+RoofMatlMembran 
+RoofMatlMetal  
+RoofMatlTar&Grv 
+RoofMatlWdShake
+RoofMatlWdShngl
+BsmtQualGd 
+BsmtExposureGd 
+BsmtFinSF1 
+BsmtFinSF2  
+BsmtUnfSF  
+X1stFlrSF
+X2ndFlrSF  
+KitchenQualGd
+KitchenQualTA  
+PoolArea
+
+Variables Selected using Forward Selection, Backward Elimination and Stepwise
+
+![Variable Selection 1](projectH.jpg){width="50%"}
+![Variable Selection 2](projectI.jpg){width="50%"}
+
+List of Variables to be included for Linear Regression Model based on the above techniques performed on all the variables from the dataset:
+OverallQual 
+RoofMat
+OverallCond  
+LotArea 
+PoolArea 
+
+
+## Preliminary insights
+
+1. Describe initial insights from the EDA that might be useful for further analysis.
+
+The initial insights from the EDA suggest that some of the variables like SalesCondition, Neighbourhood, LotFrontage, House Style, SalesCondition, First Floor Square Ft and Above Ground Living Area are highly correlated with the SalesPrice. Thus, these variables will be useful for further analysis.
+
+
+## Data cleaning
+
+1. Clean the data if necessary or fix any noise in the data. Describe how the data cleaning is performed.
+Data Cleaning was performed for the selected dataset in R. Looking at the data, a large number of NAs were found for most of the variables. A lot of categorical variables had a significant number of missing values. But the variables that we consider significant do not have any NA’s. We removed the NAs from the numeric variables with the means of the respective variables in R. 
+
+```{r clean}
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+
+#converting categorical variables to factor
+names <- c(2,3,6:17,22:26,28:34,36,40:43,54,56,58,59,61,64:66,73:75,79,80)
+
+data[,names] <- lapply(data[,names] , factor)
+
+#replaccing NAs with mean
+for(i in 1:ncol(data)) {                                  
+  data[ , i][is.na(data[ , i])] <- mean(data[ , i], na.rm = TRUE)
+}
+
+#omiting rows with mostly Nas
+data4 <- data[, -c(1,73,74,75,7,10)]
+data4 <- na.omit(data4)
+
+```
+
+
+## Data Preparation
+Data was transformed by subsetting the dataset including just the significant variables and discarding the insignificant variables which will be used to perform linear regression and knn.
+
+1. Describe any data transformation, integration, imputation, formatting required.
+
+```{r prep}
+#selecting variables to perform linear regression based on variables selected from the first method of variable selection
+data5 = subset(data, select = c(13, 17, 80, 79, 47, 20, 39, 62, 53, 21, 27, 57, 52, 55, 71, 81))
+
+#selecting variables to perform linear regression based on variables selected from the second method of variable selection
+data6 = subset(data, select = c(18,23,19,5,72,35,81))
+
+for(i in 1:ncol(data5)) {                                  
+  data5[ , i][is.na(data5[ , i])] <- mean(data5[ , i], na.rm = TRUE)
+}
+
+for(i in 1:ncol(data6)) {                                  
+  data6[ , i][is.na(data6[ , i])] <- mean(data6[ , i], na.rm = TRUE)
+}
+
+summary(data5)
+summary(data6)
+
+```
+
+
+# Expanded Final Modeling and Predictive Analytics and their Evaluation
+
+Select at least three models for the project and for each model submit the following
+
+## First Model: Linear Regression
+1. Specify the type of model built and/or patterns mined and why the type of model fits the problem
+Linear regression predicts a response variable(target), y, as a linear function of explanatory
+variables(predictors). Our target variable is “SalePrice”, which is numeric. Since our target
+variable is numeric, we decided to build a linear regression model.
+
+2. Discuss why and how this model should "solve" the business problem (i.e., improve along some dimension of interest to the firm).
+A linear Regression model tells us about the most significant variables that affect the Sales
+Price of a house. The model is relevant for a Real Estate agency in deciding what to focus
+on while looking for possible buyers.
+
+
+3. Include the results from running each model.
+
+Linear Regression - on variables selected from first technique
+```{r model1}
+set.seed(5)
+train.rows <- sample(rownames(data5), dim(data5)[1]*0.7)
+train.data <- data5[train.rows,]
+valid.rows <- setdiff(rownames(data5),train.rows)
+valid.data <- data5[valid.rows,]
+
+reg <- lm(SalePrice ~ ., data = data5, subset = train.rows)
+summary(reg)
+
+pred.tr <- predict(reg, newdata=train.data)
+
+pred <- predict(reg, newdata=valid.data)
+
+```
+
+Linear Regression - on variables selected from second technique
+```{r model1.1}
+set.seed(5)
+train.rows1 <- sample(rownames(data6), dim(data6)[1]*0.7)
+train.data1 <- data6[train.rows1,]
+valid.rows1 <- setdiff(rownames(data6),train.rows1)
+valid.data1 <- data6[valid.rows1,]
+reg2 <- lm(SalePrice ~ ., data = data6, subset = train.rows1)
+summary(reg2)
+
+pred.tr1 <- predict(reg2, newdata=train.data1)
+
+pred1 <- predict(reg2, newdata=valid.data1)
+```
+
+
+4. Interpret the results and relate to the goals of the project and include at least two visuals other than the results to help tell the story
+Looking at the adjusted R-squared from both the runs, we can see that adjusted R-squared from the first run is more than from the second run. This indicates that additional input variables are adding value to the model in first run where we selected numeric variables using stepwise and categorical variables using EDA and intuition. 
+
+
+```{r model1 plot}
+library(forecast)
+accuracy(pred, valid.data$SalePrice)
+training_errors <- pred.tr - train.data$SalePrice
+validation_errors <- pred - valid.data$SalePrice
+
+hist(training_errors, col = "blue")
+hist(validation_errors,add=T, col = "red")
+legend("topright", c("training_errors", "validation_errors"), fill=c("blue", "red"))
+
+```
+
+
+```{r model1 plot 2}
+library(forecast)
+accuracy(pred1, valid.data1$SalePrice)
+training_errors <- pred.tr1 - train.data1$SalePrice
+validation_errors <- pred1 - valid.data1$SalePrice
+
+hist(training_errors, col = "blue")
+hist(validation_errors,add=T, col = "red")
+legend("topright", c("training_errors", "validation_errors"), fill=c("blue", "red"))
+
+```
+
+Discussion about first model:
+We can see from the above results that the RMSE for test set is lower using the first technique than the second technique:
+i) the adjusted R-squared is less in for the model using first technique of variable selection
+ii) RMSE for the model using first technique of variable selection is lower than the second one.
+
+So, we can say that we get a better model for Sale Price Prediction when the numeric variables are selected using stepwise and categorical vaiables are selected using EDA (exploratory data analysis) than when we select all the variables using stepwise.
+
+
+6. Discuss how the results of the techniques applied is/should be evaluated. Explain how your strategy prevents overfitting, bias and other negative influences.
+We can evaluate the techniques using RMSE and adjusted R-squared as we have done in the previous sections to conclude how we should select variables for linear regression and which method gave us better results for linear regression model.
+
+We divided the datset into training and test set as 70-30 split to prevent overfitting. This helps building a good model which we can see with the RMSE values for training and test set and they don't vary much. This shows that we prevented overfitting by splitting the dataset.
+
+7. Include at least two measures for each model and discussions (including accuracy, Lift, ROC/AUC, RMSE, etc) that we covered in class to evaluate ALL the models that you're presenting in your project
+
+We can use RMSE and LIFT to evaluate the models
+
+###RMSE for test set for linear regression model using first technique of variable selection
+```{r eval1}
+accuracy(pred, valid.data$SalePrice)
+```
+
+###Lift chart and decile-wise lift chart for linear regression model using first technique of variable selection
+
+```{r eval2}
+library(gains) 
+gain <- gains(valid.data$SalePrice[!is.na(pred)], pred[!is.na(pred)])
+options(scipen=999) 
+price <- valid.data$SalePrice[!is.na(valid.data$SalePrice)]
+
+plot(c(0,gain$cume.pct.of.total*sum(price))~c(0,gain$cume.obs), 
+     xlab="# cases", ylab="Cumulative Price", main="Lift Chart", type="l")
+lines(c(0,sum(price))~c(0,dim(valid.data)[1]), col="gray", lty=2)
+
+barplot(gain$mean.resp/mean(price), names.arg = gain$depth,  xlab = "Percentile", ylab = "Mean Response", main = "Decile-wise lift chart")
+```
+
+###RMSE for test set for linear regression model using second technique of variable selection
+```{r eval3}
+accuracy(pred1, valid.data1$SalePrice)
+```
+
+###Lift chart and decile-wise lift chart for linear regression model using second technique of variable selection
+
+```{r eval4}
+library(gains) 
+gain1 <- gains(valid.data1$SalePrice[!is.na(pred1)], pred1[!is.na(pred1)])
+options(scipen=999) 
+price1 <- valid.data1$SalePrice[!is.na(valid.data1$SalePrice)]
+
+plot(c(0,gain1$cume.pct.of.total*sum(price))~c(0,gain$cume.obs), 
+     xlab="# cases", ylab="Cumulative Price", main="Lift Chart", type="l")
+lines(c(0,sum(price1))~c(0,dim(valid.data1)[1]), col="gray", lty=2)
+
+barplot(gain1$mean.resp/mean(price1), names.arg = gain1$depth,  xlab = "Percentile", ylab = "Mean Response", main = "Decile-wise lift chart")
+```
+
+Discussion about first model evaluation
+The RMSE for the first technique is 33537.16 which good compared to the mean SalePrice that is 218091.1 compared to the RMSE using the second technique which gives RMSE of 44222.03.
+
+Looking the decile-wise lift chart, we can say that the model can choose 10% that gives the highest predictive sales(approx. 1.9 times total price compared to choosing at random)
+
+## Second Model - Regression Tree
+
+1. Specify the type of model built and/or patterns mined and why the type of model fits the problem
+The type of model built is a decision tree. Since our target variable is numeric, we built a
+regression tree. The tree built was pruned using a suitable value of cp =0.005 to prevent
+overfitting as well as underfitting. The dataset was split into 70-30 for the training set and the
+testing set.
+
+
+2. Discuss why and how this model should "solve" the business problem (i.e., improve along some dimension of interest to the firm).
+Since, the regression tree is very transparent and easy to interpret, it would be easy for a
+novice to interpret the results to predict the Sale Price of a house.
+
+3. Include the results from running each model.
+
+```{r model2}
+library(rpart)
+library(rpart.plot)
+library(forecast)
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+
+names <- c(2,3,6,7,8,9,10,11,12,13,14,15,16,17,22,23,24,25,26,28,29,30,31,32,33,34,36,40,41,42,43,54,56,58,59,61,64,65,66,73,74,75,79,80)
+data[,names] <- lapply(data[,names] , factor)
+
+for(i in 1:ncol(data)) {   
+ 
+  data[ , i][is.na(data[ , i])] <- mean(data[ , i], na.rm = TRUE )
+  
+}
+
+set.seed(1)
+
+train.index <- sample(c(1:dim(data)[1]), dim(data)[1]*0.7)
+valid.index <- setdiff(c(1:dim(data)[1]),train.index)
+train.df <- data[train.index,]
+valid.df <- data[valid.index,]
+
+options(scipen = 999)
+reg.tr <- rpart(SalePrice ~ ., method = "anova", data = train.df,  cp = 0.005)
+rpart.plot(reg.tr)
+prp(reg.tr,type = 1, extra = 1, split.font = 1, varlen = -10)
+
+
+```
+
+4. Interpret the results and relate to the goals of the project and include at least two visuals other than the results to help tell the story
+
+
+
+Discussion about second model
+
+```{r model2 plot}
+pred.tr <- predict(reg.tr, newdata = train.df)
+pred <- predict(reg.tr, newdata = valid.df)
+
+
+training_errors <- pred.tr - train.df$SalePrice
+validation_errors <- pred - valid.df$SalePrice
+
+hist(training_errors, col = "blue")
+hist(validation_errors,add=T, col = "red")
+legend("topright", c("training_errors", "validation_errors"), fill=c("blue", "red"))
+
+```
+
+6. Discuss how the results of the techniques applied is/should be evaluated. Explain how your strategy prevents overfitting, bias and other negative influences.
+Since the target variable is a numerical variable, RMSE can be used for evaluation. Also lift can be used for evaluation. Since, we pruned the tree using cp value to be 0.005, this prevented overfitting of the model. Also, no variables were removed, and we know the regression tree picks the variables by itself using information gains, hence this strategy prevents bias and other negative influences as well.
+
+7. Include at least two measures for each model and discussions (including accuracy, Lift, ROC/AUC, RMSE, etc) that we covered in class to evaluate ALL the models that you're presenting in your project
+
+###RMSE
+```{r evaluation1}
+pred <- predict(reg.tr, newdata = valid.df)
+accuracy(pred, valid.df$SalePrice)
+```
+
+###Lift and decile-wise lift chart
+```{r evaluation3}
+library(gains)
+gain <- gains(valid.df$SalePrice[!is.na(pred)], pred[!is.na(pred)])
+options(scipen=999)
+price <- valid.df$SalePrice[!is.na(valid.df$SalePrice)]
+
+plot(c(0,gain$cume.pct.of.total*sum(price))~c(0,gain$cume.obs),
+     xlab="# cases", ylab="Cumulative Price", main="Lift Chart", type="l")
+lines(c(0,sum(price))~c(0,dim(valid.df)[1]), col="gray", lty=2)
+
+barplot(gain$mean.resp/mean(price), names.arg = gain$depth,  xlab = "Percentile", ylab = "Mean Response", main = "Decile-wise lift chart")
+
+```
+
+Discussion about second model's evaluation
+The RMSE for the test set is 38462.2 which seems good if we see the mean value of SalePrice which is 218091.1.
+
+Looking the decile-wise lift chart, we can say that the model can choose 11% that gives the highest predictive sales(approx. 1.8 times total price compared to choosing at random)
+
+
+## Third Model - knn-regression
+1. Specify the type of model built and/or patterns mined and why the type of model fits the problem
+We built a k-nn model splitting the data into a training set and testing set in 70:30 ratio. For
+the knn model, the categorical variables were converted into dummy variables as knn
+calculates distances for identifying nearest neighbors and hence cannot work with
+categorical variables. The k-value for the model was selected using a hit and trial method
+and the best results were obtained with k=8.
+
+
+2. Discuss why and how this model should "solve" the business problem (i.e., improve along some dimension of interest to the firm).
+The knn model is known to provide trustworthy results because it predicts the SalePrice
+using an effective algorithm of recognizing nearest neighbors. Nearest neighbor methods is
+an instance learning method that happens to be very efficient especially for large complex
+datasets. Therefore, this model should be able to solve the business problem.
+
+3. Include the results from running each model.
+```{r model3}
+data <- read.csv("house-prices-advanced-regression-techniques/train.csv")
+
+datareg <- data[,-c(1:3,6:19,22:26,28:34,36,40:43,54,56,58,59,61,64:66,73:75,79,80)]
+for(i in 1:ncol(datareg)) {                                  
+  datareg[ , i][is.na(datareg[ , i])] <- mean(datareg[ , i], na.rm = TRUE)
+}
+str(datareg)
+sp <- datareg %>% select(SalePrice)
+datareg <- datareg %>% select(-SalePrice)
+str(datareg)
+datareg[, c(1:33)] <- scale(datareg[, c(1:33)])
+
+head(datareg)
+str(datareg)
+set.seed(4)
+smp_size <- floor(0.75 * nrow(datareg))
+train_ind <- sample(seq_len(nrow(datareg)), size = smp_size)
+reg_pred_train <- datareg[train_ind, ]
+reg_pred_test <- datareg[-train_ind, ]
+sp_train <- sp[train_ind, ]
+sp_test <- sp[-train_ind, ]
+library(FNN)
+library(e1071)
+library(FNN) 
+library(class)
+for(i in 1:20) {
+
+  reg_results <- knn.reg(reg_pred_train, reg_pred_test, sp_train, k = i)
+  
+   t <- accuracy(sp_test, reg_results$pred)
+  print(t)
+  
+}
+
+
+```
+```{r code for best k}
+reg_results <- knn.reg(reg_pred_train, reg_pred_test, sp_train, k = 8)
+```
+
+5. Interpret the results and relate to the goals of the project and include at least two visuals other than the results to help tell the story
+
+A stable and viable RMSE value was found to be for the value 0f k=8. 
+
+
+Discussion about third model
+
+
+
+```{r model3 plot}
+summary(reg_results)
+```
+
+6. Discuss how the results of the techniques applied is/should be evaluated. Explain how your strategy prevents overfitting, bias and other negative influences.
+
+The results should be evaluated using RMSE and MAE since the target variable is numeric. Since, the dataset was splitted into a ratio of 70:30 to get training and testing set. This technique prevents overfitting.
+
+7. Include at least two measures for each model and discussions (including accuracy, Lift, ROC/AUC, RMSE, etc) that we covered in class to evaluate ALL the models that you're presenting in your project
+
+```{r evaluation4}
+accuracy(sp_test, reg_results$pred)
+```
+
+Discussion about third model's evaluation
+
+The RMSE value of the model is 40209.35 which seems to be pretty good as the mean of the SalesPrice is 218091.1. The MAE of the model is 22420.35 which also seems pretty reasonable.
+
+
+# Deployment
+
+1. Discuss how the result of the analytics will be deployed.
+
+Summary of the project:
+This project was carried out as a culmination of all concepts, predictive analysis and modeling techniques learnt during the Data Analytics for Managers course during Fall 2022. We picked the topic “predicting house sales prices”, which is a technique of pricing analytics. A dataset was acquired from Kaggle, with 81 variables of houses in Iowa. Each variable is described in detail in earlier parts of this report. 
+
+Experience Gained:
+As students, this project was a great opportunity to have hands-on experience in the world of data analytics. Learning concepts from a book is easy, but to implement them in real world situations and draw insights is an incredible experience which we got through this project.
+
+Monitoring and Maintenance:
+To deploy the result of this project, we would approach the businesses in the real estate industry in Iowa. We can identify the top real estate dealers in Iowa by a quick search on the internet and present them our findings and insights through the data analysis conducted for this project. To keep this model updated, we would need to monitor closely the  significant variables that have a direct impact on the sales price of a house. We would also need to closely monitor any new houses that are put up on the market and their features, if something new is added in the house or if something is removed, to keep the dataset updated regularly and identify any changes taking place.  We can use data visualization tools like Weka, Power BI and Tableau to create dashboards and maintain them so not much work will need to be done every time we run the model. The dashboard can be automatically updated as soon as something changes in the dataset.
+
+Cost Benefit Analysis:
+For successful deployment of this project, it is important to identify the different costs that were incurred during the process and the benefits achieved from them. As students, there was no cost associated with this project as the dataset was picked up from the popular data sourcing platform, Kaggle. All the modeling techniques and algorithm processing was done on Rstudio and Weka, which was also available free of cost to us. However, the potential cost that could be incurred while deployment, would be to gather a similar dataset in a different locality. The dataset that we used in this project is from Iowa and can be successfully deployed in Iowa and in neighboring states such as Illinois or Minnesota as geographically and economically no significant changes would occur there. But gathering a similar dataset for California would include different variables, geographically and economically. Purchasing power of individuals and their priorities in a house would be different depending on parameters like income and weather. So gathering that data would cost us some amount.
+Benefits achieved from this project are numerous. If the business implements the strategies and modeling techniques from this project, they could save a considerable amount of time. They could put a price on a house without much background working or site visits which usually takes several weeks. This is a great way to automate their processes so less individuals would be required to carry out repetitive, mundane tasks. This means that those individuals can be used as resources in other tasks such as customer service or client handling which would be more impactful for the business.
+Possible Problems during Deployment
+As mentioned above, a potential problem during deployment is deploying the result in a different state or country. 
+
+
+2. Discuss any issues including any ethical issues the firm should be aware of regarding deployment.
+
+Misrepresentation:
+This data could be misrepresented and potentially misguide buyers if the dynamics behind analysis are not understood properly as there are 81 variables, which is a lot. For example: a user could confuse GarageQual versus GarageCond or OverallCond versus OverallQual. It is important to understand and explain each variable and data entry in those variables when deploying.
+
+Violation of Data Privacy:
+We would also have to take care of data privacy and confidentiality for this kind of dataset. We have details of houses where a family or individual might be living currently and we need to be careful to not expose their identities and house address to other people which could put them at risk. This information is irrelevant as well for the data analysis so steps should be taken to remove this information during data cleaning and preprocessing.
+
+
+# Comparisons with documented results
+
+1. Discuss how your results compare with any existing or documented results from the same data set. Provide the URL to the document report and describe the sources of the differences including EDA, models and results.
+
+We compared the results of all three models from the results obtained using the same models on the same dataset mentioned in the following URL:
+
+Source: https://www.kaggle.com/code/anderfj/data-preprocessing-impact-on-10-ml-models#missing-data
+
+Sources of differences:
+
+EDA and dimension reduction:
+
+They included following plots while doing their EDA:
+
+![First visual](projectJ.png){width="50%"}
+![First visual](projectK.png){width="50%"}
+![First visual](projectL.png){width="50%"}
+
+
+In order to identify significant variables they used a method called Pearson Correlations. The following figure displays the results obtained.
+
+![First visual](projectM.png){width="50%"}
+Therefore based on the above analysis they identified the following important variables which they used for the linear regression model. 
+
+TotalSF
+OverallQual
+Bathrooms
+GarageCars
+YearBuilt
+BsmtQual
+GarageFinish
+GarageYrBlt
+FireplaceQu
+YearRemodAdd
+Neighborhood
+
+On the other hand, we used forward, backward and stepwise selection for dimension reduction, and our significant variables are mentioned in the report.
+
+Comparison of results:
+
+Result of linear regression:
+
+RMSE of their model: 14711
+RMSE of our model: 33537
+
+Results of regression tree:
+
+RMSE of their model: 23130
+RMSE of our model: 33462
+
+Results of k-nn:
+
+RMSE of their model: 23130
+RMSE of our model: 40209.48
+
